@@ -57,7 +57,7 @@ export const GithubWidget = ({ className }: { className?: string }) => {
 
   if (loading) {
     return (
-      <div className={cn("flex h-full min-h-[300px] items-center justify-center rounded-3xl border border-white/5 bg-zinc-900/50", className)}>
+      <div className={cn("flex h-full min-h-[300px] items-center justify-center rounded-3xl border border-zinc-200 dark:border-white/5 bg-white dark:bg-zinc-900/50", className)}>
         <Loader2 className="h-6 w-6 animate-spin text-emerald-500" />
       </div>
     );
@@ -65,7 +65,7 @@ export const GithubWidget = ({ className }: { className?: string }) => {
 
   if (error || !stats) {
     return (
-      <div className={cn("flex h-full min-h-[300px] flex-col items-center justify-center gap-2 rounded-3xl border border-red-500/20 bg-red-500/5 p-6 text-center", className)}>
+      <div className={cn("flex h-full min-h-[300px] flex-col items-center justify-center gap-2 rounded-3xl border border-red-500/20 bg-red-50 dark:bg-red-500/5 p-6 text-center", className)}>
         <AlertCircle className="h-8 w-8 text-red-500" />
         <p className="text-sm text-red-400">GitHub Token Required</p>
         <p className="text-xs text-zinc-500">Add GITHUB_PERSONAL_ACCESS_TOKEN to Secrets</p>
@@ -108,24 +108,24 @@ export const GithubWidget = ({ className }: { className?: string }) => {
 
         {/* Stats Grid */}
         <div className="grid grid-cols-2 gap-3 mb-6">
-          <div className="rounded-2xl bg-white/5 p-3 ring-1 ring-white/5">
+          <div className="rounded-2xl bg-zinc-50 dark:bg-white/5 p-3 ring-1 ring-zinc-200 dark:ring-white/5">
             <p className="text-[10px] uppercase tracking-widest text-zinc-500 mb-1">Total Repos</p>
             <div className="flex items-center gap-2">
               <GitBranch className="h-4 w-4 text-emerald-500" />
-              <span className="text-lg font-bold text-white">{stats.totalRepos}</span>
+              <span className="text-lg font-bold text-zinc-900 dark:text-white">{stats.totalRepos}</span>
             </div>
           </div>
-          <div className="rounded-2xl bg-white/5 p-3 ring-1 ring-white/5">
+          <div className="rounded-2xl bg-zinc-50 dark:bg-white/5 p-3 ring-1 ring-zinc-200 dark:ring-white/5">
             <p className="text-[10px] uppercase tracking-widest text-zinc-500 mb-1">Following</p>
             <div className="flex items-center gap-2">
               <Star className="h-4 w-4 text-emerald-500" />
-              <span className="text-lg font-bold text-white">{stats.following}</span>
+              <span className="text-lg font-bold text-zinc-900 dark:text-white">{stats.following}</span>
             </div>
           </div>
         </div>
 
         {/* Tabs */}
-        <div className="flex gap-4 mb-4 border-b border-white/5">
+        <div className="flex gap-4 mb-4 border-b border-zinc-100 dark:border-white/5">
           <button 
             onClick={() => setActiveTab("activity")}
             className={cn(
@@ -160,7 +160,7 @@ export const GithubWidget = ({ className }: { className?: string }) => {
                 className="space-y-2"
               >
                 {stats.activity.map((item) => (
-                  <div key={item.id} className="flex flex-col gap-1 rounded-xl bg-white/5 p-3 ring-1 ring-white/5 hover:bg-white/10 transition-colors">
+                  <div key={item.id} className="flex flex-col gap-1 rounded-xl bg-zinc-50 dark:bg-white/5 p-3 ring-1 ring-zinc-200 dark:ring-white/5 hover:bg-zinc-100 dark:hover:bg-white/10 transition-colors">
                     <div className="flex items-center justify-between">
                       <span className="text-[10px] font-bold text-emerald-500 uppercase tracking-tighter">
                         {item.type.replace('Event', '')}
@@ -169,7 +169,7 @@ export const GithubWidget = ({ className }: { className?: string }) => {
                         {new Date(item.date).toLocaleDateString()}
                       </span>
                     </div>
-                    <p className="text-xs text-zinc-300 line-clamp-1">{item.repo}</p>
+                    <p className="text-xs text-zinc-700 dark:text-zinc-300 line-clamp-1">{item.repo}</p>
                     {item.payload.commits && (
                       <p className="text-[10px] text-zinc-500 italic line-clamp-1">
                         "{item.payload.commits[0].message}"
@@ -189,10 +189,10 @@ export const GithubWidget = ({ className }: { className?: string }) => {
                 {stats.topLanguages.map((lang) => (
                   <div key={lang.name} className="space-y-1.5">
                     <div className="flex justify-between text-xs">
-                      <span className="text-zinc-300 font-medium">{lang.name}</span>
+                      <span className="text-zinc-700 dark:text-zinc-300 font-medium">{lang.name}</span>
                       <span className="text-zinc-500">{lang.count} repos</span>
                     </div>
-                    <div className="h-1.5 w-full rounded-full bg-white/5 overflow-hidden">
+                    <div className="h-1.5 w-full rounded-full bg-zinc-100 dark:bg-white/5 overflow-hidden">
                       <motion.div 
                         initial={{ width: 0 }}
                         animate={{ width: `${(lang.count / stats.totalRepos) * 100}%` }}

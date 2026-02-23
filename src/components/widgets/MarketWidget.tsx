@@ -21,9 +21,24 @@ export const MarketWidget = ({ className }: { className?: string }) => {
   useEffect(() => {
     const fetchMarket = async () => {
       try {
-        const response = await fetch("/api/market");
-        const result = await response.json();
-        setData(result);
+        // Fetch Crypto
+        const cryptoRes = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd");
+        const cryptoData = await cryptoRes.json();
+
+        // Fetch Rates
+        const currencyRes = await fetch("https://api.exchangerate-api.com/v4/latest/USD");
+        const currencyData = await currencyRes.json();
+
+        setData({
+          crypto: {
+            bitcoin: cryptoData.bitcoin.usd,
+            ethereum: cryptoData.ethereum.usd
+          },
+          rates: {
+            TRY: currencyData.rates.TRY,
+            EUR: currencyData.rates.EUR
+          }
+        });
       } catch (err) {
         console.error("Market fetch error:", err);
       } finally {
@@ -38,7 +53,7 @@ export const MarketWidget = ({ className }: { className?: string }) => {
 
   if (loading) {
     return (
-      <div className={cn("flex h-full min-h-[160px] items-center justify-center rounded-3xl border border-white/5 bg-zinc-900/50", className)}>
+      <div className={cn("flex h-full min-h-[160px] items-center justify-center rounded-3xl border border-zinc-200 dark:border-white/5 bg-white dark:bg-zinc-900/50", className)}>
         <Loader2 className="h-5 w-5 animate-spin text-emerald-500" />
       </div>
     );
@@ -68,14 +83,14 @@ export const MarketWidget = ({ className }: { className?: string }) => {
               <Bitcoin className="h-4 w-4 text-orange-500" />
               <div>
                 <p className="text-[10px] text-zinc-500 uppercase">Bitcoin</p>
-                <p className="text-sm font-bold text-zinc-900 dark:text-white">${data?.crypto.bitcoin.toLocaleString()}</p>
+                <p className="text-sm font-bold text-zinc-900 dark:text-white">${data?.crypto?.bitcoin?.toLocaleString() ?? "0"}</p>
               </div>
             </div>
             <div className="flex items-center gap-2">
               <div className="h-4 w-4 rounded-full bg-blue-500/20 flex items-center justify-center text-[10px] font-bold text-blue-500">E</div>
               <div>
                 <p className="text-[10px] text-zinc-500 uppercase">Ethereum</p>
-                <p className="text-sm font-bold text-zinc-900 dark:text-white">${data?.crypto.ethereum.toLocaleString()}</p>
+                <p className="text-sm font-bold text-zinc-900 dark:text-white">${data?.crypto?.ethereum?.toLocaleString() ?? "0"}</p>
               </div>
             </div>
           </div>
@@ -86,14 +101,18 @@ export const MarketWidget = ({ className }: { className?: string }) => {
               <DollarSign className="h-4 w-4 text-emerald-500" />
               <div>
                 <p className="text-[10px] text-zinc-500 uppercase">USD / TRY</p>
-                <p className="text-sm font-bold text-zinc-900 dark:text-white">₺{data?.rates.TRY.toFixed(2)}</p>
+                <p className="text-sm font-bold text-zinc-900 dark:text-white">₺{data?.rates?.TRY?.toFixed(2) ?? "0.00"}</p>
               </div>
             </div>
             <div className="flex items-center gap-2">
               <div className="h-4 w-4 rounded-full bg-zinc-500/20 flex items-center justify-center text-[10px] font-bold text-zinc-500">€</div>
               <div>
                 <p className="text-[10px] text-zinc-500 uppercase">EUR / TRY</p>
-                <p className="text-sm font-bold text-zinc-900 dark:text-white">₺{(data!.rates.TRY / data!.rates.EUR * data!.rates.TRY).toFixed(2)}</p>
+                <p className="text-sm font-bold text-zinc-900 dark:text-white">
+                  ₺{data?.rates?.TRY && data?.rates?.EUR 
+                      ? ((data.rates.TRY / data.rates.EUR) * 1).toFixed(2) 
+                      : "0.00"}
+                </p>
               </div>
             </div>
           </div>
